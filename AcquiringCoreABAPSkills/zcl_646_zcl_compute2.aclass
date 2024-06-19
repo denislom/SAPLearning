@@ -1,0 +1,75 @@
+CLASS zcl_646_zcl_compute DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+
+    INTERFACES if_oo_adt_classrun .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS zcl_646_zcl_compute IMPLEMENTATION.
+
+
+  METHOD if_oo_adt_classrun~main.
+* Declarations
+**************************
+
+    DATA number1 TYPE i.
+    DATA number2 TYPE i.
+
+    DATA result TYPE p LENGTH 8 DECIMALS 2.
+
+    DATA op TYPE c LENGTH 1.
+    DATA output TYPE string.
+
+
+* Input Values
+**************************
+
+    number1 = 123.
+    number2 = 0.
+    op = '/'.
+
+* Calculation
+**************************
+
+*    DATA(result) = number1 / number2.
+
+*    result = number1 / number2.
+*
+*    DATA(output) = |{ number1 } / { number2 } = { result }|.
+
+    CASE op.
+        WHEN '+'.
+            result = number1 + number2.
+        WHEN '-'.
+            result = number1 - number2.
+        WHEN '*'.
+            result = number1 * number2.
+        WHEN '/'.
+            TRY.
+                result = number1 / number2.
+              CATCH CX_SY_ZERODIVIDE.
+                output = |You can not divide by zero.|.
+            ENDTRY.
+        WHEN '%'.
+            result = number1 MOD number2.
+        WHEN OTHERS.
+            output = |'{ op }' is not a valid operator!|.
+    ENDCASE.
+
+
+* Output
+**************************
+    IF output IS INITIAL.
+        output = |{ number1 } / { number2 } = { result }|.
+    ENDIF.
+    out->write( output ).
+
+  ENDMETHOD.
+ENDCLASS.
