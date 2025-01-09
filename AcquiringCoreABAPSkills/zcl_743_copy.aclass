@@ -1,0 +1,34 @@
+CLASS zcl_743_copy DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+
+    INTERFACES if_oo_adt_classrun .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS ZCL_743_COPY IMPLEMENTATION.
+
+
+  METHOD if_oo_adt_classrun~main.
+
+    CONSTANTS Z743FLIGHT TYPE tabname VALUE 'Z743FLIGHT'.
+
+    TRY.
+        DATA(copier) = NEW lcl_copy_data( Z743FLIGHT ).
+        copier->copy_data( ).
+
+        out->write( |{ Z743FLIGHT } was filled with data| ).
+
+      CATCH cx_abap_not_a_table.
+
+        out->write( |{ Z743FLIGHT } is not a table of the right type.| ).
+
+    ENDTRY.
+  ENDMETHOD.
+ENDCLASS.
