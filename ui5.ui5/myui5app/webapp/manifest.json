@@ -1,0 +1,98 @@
+{
+    "_version": "1.60.0",
+    "sap.app": {
+        "id": "myui5app",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "",
+            "version": ""
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.128.1",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.fe.templates": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "myui5app.i18n.i18n"
+                }
+            }
+        },
+        "resources": {
+            "css": []
+        },
+        "routing": {
+            "config": {},
+            "routes": [
+                {
+                    "name": "CustomPage",
+                    "pattern": ":?query:",
+                    "target": "CustomPage"
+                },
+                {
+                    "name": "Routenewview",
+                    "pattern": "newview",
+                    "target": [
+                        "Targetnewview"
+                    ]
+                }
+            ],
+            "targets": {
+                "CustomPage": {
+                    "type": "Component",
+                    "id": "CustomPage",
+                    "name": "sap.fe.core.fpm",
+                    "options": {
+                        "settings": {
+                            "navigation": {},
+                            "contextPath": "/",
+                            "viewName": "myui5app.ext.customPage.CustomPage"
+                        }
+                    }
+                },
+                "Targetnewview": {
+                    "viewType": "XML",
+                    "transition": "Slide",
+                    "clearControlAggregation": false,
+                    "viewId": "newview",
+                    "viewName": "newview"
+                }
+            }
+        }
+    }
+}

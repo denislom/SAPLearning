@@ -1,0 +1,8 @@
+<mvc:View controllerName="myui5app.controller.newview"
+    xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	displayBlock="true">
+	<Page id="page" title="{i18n>newview}">
+        <content />
+    </Page>
+</mvc:View>

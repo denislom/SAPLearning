@@ -1,0 +1,78 @@
+_schema-version: "3.2"
+ID: ui5.ui5
+version: 0.0.1
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm install
+        - npm run build:workspaces
+modules:
+  - name: ui5.ui5-destination-content
+    type: com.sap.application.content
+    requires:
+      - name: ui5.ui5-auth
+      - name: ui5.ui5-html-repo-host
+      - name: ui5.ui5-destination-service
+        parameters:
+          content-target: true
+    parameters:
+      content:
+        instance:
+          existing_destinations_policy: update
+          destinations:
+            - Name: ui5.ui5-html-repo-host
+              ServiceInstanceName: ui5.ui5-html-repo-host
+              ServiceKeyName: ui5.ui5-html-repo-host-key
+              sap.cloud.service: basic.service
+            - Name: ui5.ui5-auth
+              ServiceInstanceName: ui5.ui5-auth
+              ServiceKeyName: ui5.ui5-auth-key
+              sap.cloud.service: basic.service
+              Authentication: OAuth2UserTokenExchange
+    build-parameters:
+      no-source: true
+  - name: ui5.ui5-ui-deployer
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: ui5.ui5-html-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - dist/myui5app-content.zip
+          name: myui5app
+          target-path: resources/
+  - name: myui5app
+    type: html5
+    path: myui5app
+    build-parameters:
+      supported-platforms: []
+resources:
+  - name: ui5.ui5-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-name: ui5.ui5-destination-service
+      service-plan: lite
+      config:
+        HTML5Runtime_enabled: true
+        version: 0.0.1
+  - name: ui5.ui5-html-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+      service-keys:
+        - name: ui5.ui5-html-repo-host-key
+  - name: ui5.ui5-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-plan: application
+      service-keys:
+        - name: ui5.ui5-auth-key
