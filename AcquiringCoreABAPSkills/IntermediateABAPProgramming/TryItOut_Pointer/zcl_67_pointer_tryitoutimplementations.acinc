@@ -1,0 +1,87 @@
+*"* use this source file for the definition and implementation of
+*"* local helper classes, interface definitions and type
+*"* declarations
+
+
+
+CLASS lcl_demo DEFINITION.
+    PUBLIC SECTION.
+    TYPES t_output TYPE string.
+    TYPES tt_output TYPE STANDARD TABLE OF t_output
+                    WITH NON-UNIQUE DEFAULT KEY.
+
+    METHODS use_work_area.
+    METHODS use_field_symbol.
+    METHODS get_output RETURNING VALUE(r_result) TYPE tt_output.
+    PRIVATE SECTION.
+    TYPES t_flights TYPE STANDARD TABLE OF /dmo/flight WITH NON-UNIQUE KEY carrier_id connection_id flight_date.
+
+    DATA n1 TYPE i.
+    DATA n2 TYPE i.
+    DATA n3 TYPE i.
+    DATA n4 TYPE i.
+
+
+
+
+
+    METHODS loop_field_symbol CHANGING c_flights TYPE t_Flights.
+    METHODS loop_Work_area CHANGING c_flights TYPE t_flights.
+
+ENDCLASS.
+
+
+CLASS lcl_demo IMPLEMENTATION.
+
+METHOD use_field_symbol.
+
+    DATA flights TYPE t_flights.
+    SELECT FROM /dmo/flight FIELDS * INTO TABLE @flights.
+    loop_field_symbol( CHANGING c_flights = flights ).
+
+ENDMETHOD.
+
+
+METHOD use_work_area.
+    DATA flights TYPE t_flights.
+    SELECT FROM /dmo/flight FIELDS * INTO TABLE @flights.
+    loop_work_area( CHANGING c_flights = flights ).
+ENDMETHOD.
+
+
+METHOD loop_field_symbol.
+
+    FIELD-SYMBOLS <flight> LIKE LINE OF c_flights.
+
+    LOOP AT c_flights ASSIGNING <flight>.
+        n1 = <flight>-seats_occupied.
+        <flight>-seats_occupied += 1.
+        n2 = <flight>-seats_occupied.
+    ENDLOOP.
+
+ENDMETHOD.
+
+
+METHOD loop_work_area.
+
+
+    LOOP AT c_flights INTO DATA(flight).
+        n3 = flight-seats_occupied.
+        flight-seats_occupied += 1.
+        MODIFY c_flights FROM flight.
+        n4 = flight-seats_occupied.
+    ENDLOOP.
+
+ENDMETHOD.
+
+  METHOD get_output.
+
+    APPEND |{ 'seats occupied 1:'   } { n1 } | TO r_result.
+    APPEND |{ 'seats occupied 2:'   } { n2 } | TO r_result.
+    APPEND |{ 'seats occupied 3:'   } { n3 } | TO r_result.
+    APPEND |{ 'seats occupied 4:'   } { n4 } | TO r_result.
+
+  ENDMETHOD.
+
+
+ENDCLASS.
